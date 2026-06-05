@@ -1,17 +1,13 @@
-# roaa_project_flutter
+# Jordan Shop
 
-A new Flutter project.
+A modern Flutter e-commerce application developed as part of the Intelligent Systems Engineering coursework.
 
-## Getting Started
+## Features
+* **Dynamic Home Screen**: Browse through products with a custom bottom navigation bar.
+* **Category Filtering**: Easily filter products by Electronics, Clothes, or Shoes using a responsive ShopController.
+* **Product Search**: Real-time search functionality to find specific items instantly.
+* **User Profile**: Personalized profile screen built with clean UI widgets.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Technical Stack
+* **Framework**: Flutter & Dart
+* **Architecture**: MVC (Models, Controllers, Views)
