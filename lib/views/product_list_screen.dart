@@ -11,14 +11,14 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen> {
-  final ShopController controller = ShopController();
-  String selectedCategory = 'All';
+  final ShopController _controller = ShopController();
+  String _selectedCategory = 'All';
 
   @override
   Widget build(BuildContext context) {
-    List<ProductModel> displayedProducts = selectedCategory == 'All'
-        ? controller.products
-        : controller.getFilteredProducts(selectedCategory);
+    List<ProductModel> displayedProducts = _selectedCategory == 'All'
+        ? _controller.products
+        : _controller.getFilteredProducts(_selectedCategory);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,36 +27,31 @@ class _ProductListScreenState extends State<ProductListScreen> {
           padding: EdgeInsets.all(16.0),
           child: Text(
             'Categories',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
-          height: 60,
+          height: 50,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: controller.categories.length + 1,
+            itemCount: _controller.categories.length + 1,
             itemBuilder: (context, index) {
-              String categoryName = index == 0 ? 'All' : controller.categories[index - 1].name;
-              bool isSelected = selectedCategory == categoryName;
+              String categoryName = index == 0 ? 'All' : _controller.categories[index - 1].name;
+              bool isSelected = _selectedCategory == categoryName;
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: GestureDetector(
-                  onTap: () {
+                child: ElevatedButton(
+                  onPressed: () {
                     setState(() {
-                      selectedCategory = categoryName;
+                      _selectedCategory = categoryName;
                     });
                   },
-                  child: Chip(
-                    label: Text(
-                      categoryName,
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black87,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                    backgroundColor: isSelected ? Colors.blueAccent : Colors.blue.shade50,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isSelected ? Colors.blueAccent : Colors.grey[200],
+                    foregroundColor: isSelected ? Colors.white : Colors.black,
                   ),
+                  child: Text(categoryName),
                 ),
               );
             },
@@ -66,69 +61,48 @@ class _ProductListScreenState extends State<ProductListScreen> {
           padding: EdgeInsets.all(16.0),
           child: Text(
             'Products',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         Expanded(
-          child: displayedProducts.isEmpty
-              ? const Center(child: Text('No products found in this category'))
-              : ListView.builder(
-                  itemCount: displayedProducts.length,
-                  itemBuilder: (context, index) {
-                    final product = displayedProducts[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailsScreen(product: product),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Image.network(
-                                product.imageUrl,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      product.title,
-                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      product.category,
-                                      style: const TextStyle(color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'JOD ${product.price}',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.blueAccent,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+          child: ListView.builder(
+            itemCount: displayedProducts.length,
+            itemBuilder: (context, index) {
+              final product = displayedProducts[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: ListTile(
+                  leading: Image.network(
+                    product.imageUrl,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(product.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text('${product.category} | JOD ${product.price.toStringAsFixed(0)}'),
+                  trailing: IconButton(
+                    icon: Icon(
+                      product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: product.isFavorite ? Colors.red : Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        product.isFavorite = !product.isFavorite;
+                      });
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailsScreen(product: product),
                       ),
                     );
                   },
                 ),
+              );
+            },
+          ),
         ),
       ],
     );
